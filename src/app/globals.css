@@ -1,0 +1,135 @@
+/* Global Design System - Inspired by seanhalpin.xyz */
+
+:root {
+  /* Fonts */
+  --font-headings: var(--font-headings), Georgia, serif;
+  --font-body: var(--font-body), -apple-system, sans-serif;
+
+  /* Pastel Colors (Fixed) */
+  --color-beige: #efeae4;
+  --color-forest-green: #02473d;
+  --color-mint-dark: #126356;
+  --color-mint-light: #e0f0eb;
+  
+  --pastel-lilac: #ccd2ff;
+  --pastel-blue: #c7e6ff;
+  --pastel-pink: #f3d0f7;
+  --pastel-yellow: #ffeab3;
+  --pastel-rust: #f0c5b3;
+  --pastel-mint: #beefe1;
+
+  /* Theme variables - Light Mode (Default) */
+  --bg-primary: var(--color-beige);
+  --text-primary: var(--color-forest-green);
+  --text-secondary: #4a6c66;
+  
+  --accent-primary: var(--color-forest-green);
+  --accent-hover: var(--color-mint-dark);
+  --accent-bg: var(--color-mint-light);
+  
+  --border-color: rgba(2, 71, 61, 0.12);
+  --border-hover: rgba(2, 71, 61, 0.25);
+  
+  --card-bg: rgba(255, 255, 255, 0.65);
+  --card-hover-bg: rgba(255, 255, 255, 0.9);
+  --card-shadow: 0 10px 30px -10px rgba(2, 71, 61, 0.08);
+  --card-shadow-hover: 0 20px 40px -15px rgba(2, 71, 61, 0.15);
+
+  --navbar-bg: rgba(239, 234, 228, 0.75);
+}
+
+/* Dark Mode Overrides */
+.dark {
+  --bg-primary: #102e24;
+  --text-primary: #9de8d0;
+  --text-secondary: #80bda9;
+  
+  --accent-primary: #9de8d0;
+  --accent-hover: #b4edd9;
+  --accent-bg: rgba(157, 232, 208, 0.1);
+  
+  --border-color: rgba(157, 232, 208, 0.2);
+  --border-hover: rgba(157, 232, 208, 0.4);
+  
+  --card-bg: rgba(16, 46, 36, 0.6);
+  --card-hover-bg: rgba(16, 46, 36, 0.85);
+  --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+
+  --navbar-bg: rgba(16, 46, 36, 0.75);
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-headings);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+}
+
+h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+h3 {
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+}
+
+p {
+  line-height: 1.7;
+  font-size: clamp(1rem, 1.1vw, 1.25rem);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
