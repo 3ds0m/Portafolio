@@ -115,12 +115,12 @@ export default function Home() {
       demo: "",
     },
     {
-      title: "Restaurante Vintage",
-      description: "Sitio web interactivo de prueba para un restaurante tradicional ficticio, utilizado como plantilla comercial para captación de clientes de hostelería. Diseñado con una tipografía clásica, paleta de colores beige/verde oscuro, animaciones AOS y sección de reservas.",
-      tags: ["Bootstrap 5", "AOS Animations", "Web Design", "Responsive"],
+      title: "Casino Royale",
+      description: "Simulador premium de casino en línea que recrea juegos clásicos como Blackjack, Ruleta y Dados bajo una interfaz moderna y fluida. Integra sistemas de saldo virtual con persistencia de datos (LocalStorage) y algoritmos demostrablemente justos.",
+      tags: ["React", "Vite", "JavaScript", "Responsive"],
       tagColor: "var(--pastel-rust)",
-      github: "https://github.com",
-      demo: "https://restaurantevintage.vercel.app/",
+      github: "https://github.com/3ds0m/CasinoRoyale",
+      demo: "https://k-sino.vercel.app/",
     },
   ];
 
