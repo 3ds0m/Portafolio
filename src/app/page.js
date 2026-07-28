@@ -213,7 +213,7 @@ export default function Home() {
           </div>
           <p className={`${styles.heroGreeting} ${styles.fadeInUp} ${styles.delay1}`}>{greeting}</p>
           <h1 className={`${styles.heroTitle} ${styles.fadeInUp} ${styles.delay2}`}>
-            Soy <span className={styles.highlight}>Edson Gonzales</span>.
+            Soy <span className={styles.typingName}>Edson Gonzales</span>.
           </h1>
           <h2 className={`${styles.heroSubtitle} ${styles.fadeInUp} ${styles.delay3}`}>
             Desarrollador Full Stack enfocado en construir soluciones robustas, limpias y funcionales.
