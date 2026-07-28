@@ -15,15 +15,17 @@ export default function Home() {
   useEffect(() => {
     setMounted(true);
     
-    // Theme setup
+    // Theme setup: Default to light mode unless theme is explicitly saved as dark
     const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+    if (savedTheme === "dark") {
       setIsDark(true);
       document.documentElement.classList.add("dark");
     } else {
       setIsDark(false);
       document.documentElement.classList.remove("dark");
+      if (!savedTheme) {
+        localStorage.setItem("theme", "light");
+      }
     }
 
     // Dynamic greeting based on hours
@@ -36,6 +38,27 @@ export default function Home() {
       setGreeting("¡Buenas noches! 🌙");
     }
   }, []);
+
+  // Scroll Reveal Observer
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(styles.scrollRevealActive);
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    const elements = document.querySelectorAll(`.${styles.scrollReveal}`);
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [mounted]);
 
   // Handle manual theme toggle
   const toggleTheme = () => {
@@ -178,7 +201,7 @@ export default function Home() {
       {/* Hero Section */}
       <section id="hero" className={styles.heroSection}>
         <div className={styles.heroContent}>
-          <div className={styles.avatarWrapper}>
+          <div className={`${styles.avatarWrapper} ${styles.fadeInUp}`}>
             <div className={styles.avatarBgPattern}></div>
             <Image 
               src="/avatar.png" 
@@ -189,14 +212,14 @@ export default function Home() {
               priority
             />
           </div>
-          <p className={styles.heroGreeting}>{greeting}</p>
-          <h1 className={styles.heroTitle}>
+          <p className={`${styles.heroGreeting} ${styles.fadeInUp} ${styles.delay1}`}>{greeting}</p>
+          <h1 className={`${styles.heroTitle} ${styles.fadeInUp} ${styles.delay2}`}>
             Soy <span className={styles.highlight}>Edson Gonzales</span>.
           </h1>
-          <h2 className={styles.heroSubtitle}>
+          <h2 className={`${styles.heroSubtitle} ${styles.fadeInUp} ${styles.delay3}`}>
             Desarrollador Full Stack enfocado en construir soluciones robustas, limpias y funcionales.
           </h2>
-          <div className={styles.heroCta}>
+          <div className={`${styles.heroCta} ${styles.fadeInUp} ${styles.delay4}`}>
             <a href="#projects" className={styles.btnPrimary}>Ver Proyectos</a>
             <a href="#contact" className={styles.btnSecondary}>Hablemos</a>
           </div>
@@ -204,13 +227,13 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className={styles.aboutSection}>
+      <section id="about" className={`${styles.aboutSection} ${styles.scrollReveal}`}>
         <div className={styles.sectionHeader}>
           <p className={styles.sectionCategory}>01. Sobre Mí</p>
           <h2 className={styles.sectionTitle}>Filosofía & Perfil</h2>
         </div>
         <div className={styles.aboutGrid}>
-          <div className={styles.aboutCardFull}>
+          <div className={`${styles.aboutCardFull} ${styles.scrollReveal}`}>
             <p className={styles.aboutTextBig}>
               Persona de rápido aprendizaje, dedicada y comprometida. Destaco por mi capacidad de trabajo en equipo, responsabilidad, puntualidad y empatía, lo que me permite colaborar de forma efectiva con clientes y compañeros de desarrollo para crear un ambiente laboral positivo.
             </p>
@@ -233,14 +256,14 @@ export default function Home() {
       </section>
 
       {/* Experience Section */}
-      <section id="experience" className={styles.experienceSection}>
+      <section id="experience" className={`${styles.experienceSection} ${styles.scrollReveal}`}>
         <div className={styles.sectionHeader}>
           <p className={styles.sectionCategory}>02. Trayectoria</p>
           <h2 className={styles.sectionTitle}>Experiencia Laboral</h2>
         </div>
         <div className={styles.timeline}>
           {experiences.map((exp, idx) => (
-            <div key={idx} className={styles.timelineItem}>
+            <div key={idx} className={`${styles.timelineItem} ${styles.scrollReveal}`}>
               <div className={styles.timelineDot} style={{ backgroundColor: exp.color }}></div>
               <div className={styles.timelineContent}>
                 <span className={styles.timelinePeriod}>{exp.period}</span>
@@ -260,14 +283,14 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className={styles.projectsSection}>
+      <section id="projects" className={`${styles.projectsSection} ${styles.scrollReveal}`}>
         <div className={styles.sectionHeader}>
           <p className={styles.sectionCategory}>03. Mi Trabajo</p>
           <h2 className={styles.sectionTitle}>Proyectos Seleccionados</h2>
         </div>
         <div className={styles.projectsGrid}>
           {projects.map((project, idx) => (
-            <article key={idx} className={styles.projectCard}>
+            <article key={idx} className={`${styles.projectCard} ${styles.scrollReveal}`}>
               <div 
                 className={styles.projectHeaderBadge} 
                 style={{ backgroundColor: project.tagColor }}
@@ -303,14 +326,14 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className={styles.skillsSection}>
+      <section id="skills" className={`${styles.skillsSection} ${styles.scrollReveal}`}>
         <div className={styles.sectionHeader}>
           <p className={styles.sectionCategory}>04. Mi Caja de Herramientas</p>
           <h2 className={styles.sectionTitle}>Habilidades Técnicas</h2>
         </div>
         <div className={styles.skillsContainer}>
           {skillGroups.map((group, groupIdx) => (
-            <div key={groupIdx} className={styles.skillGroupCard}>
+            <div key={groupIdx} className={`${styles.skillGroupCard} ${styles.scrollReveal}`}>
               <h3 className={styles.skillGroupTitle}>{group.category}</h3>
               <div className={styles.skillsList}>
                 {group.skills.map((skill, sIdx) => {
@@ -341,13 +364,13 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className={styles.contactSection}>
+      <section id="contact" className={`${styles.contactSection} ${styles.scrollReveal}`}>
         <div className={styles.sectionHeader}>
           <p className={styles.sectionCategory}>05. Hablemos</p>
           <h2 className={styles.sectionTitle}>¿Listo para empezar un proyecto?</h2>
         </div>
         <div className={styles.contactLayout}>
-          <div className={styles.contactInfo}>
+          <div className={`${styles.contactInfo} ${styles.scrollReveal}`}>
             <h3>Información de Contacto</h3>
             <p>No dudes en comunicarte conmigo para oportunidades laborales, colaboraciones freelancing o cualquier consulta técnica.</p>
             <div className={styles.infoList}>
@@ -374,7 +397,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className={styles.contactCard}>
+          <div className={`${styles.contactCard} ${styles.scrollReveal}`}>
             <form onSubmit={handleSubmit} className={styles.contactForm}>
               <div className={styles.formGroup}>
                 <label htmlFor="name">Nombre</label>

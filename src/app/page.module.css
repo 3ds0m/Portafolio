@@ -23,8 +23,8 @@
   width: 100%;
   max-width: 800px;
   background-color: var(--navbar-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
   border-radius: 50px;
   padding: 0.6rem 1.5rem;
@@ -143,15 +143,19 @@
   background-color: var(--accent-bg);
   padding: 0.3rem 1rem;
   border-radius: 20px;
+  display: inline-block;
 }
 
 .heroTitle {
   margin-bottom: 1.5rem;
+  font-size: clamp(2.2rem, 7vw, 4.2rem);
+  line-height: 1.1;
 }
 
 .highlight {
   color: var(--accent-primary);
   position: relative;
+  display: inline-block;
 }
 
 .highlight::after {
@@ -169,7 +173,7 @@
 
 .heroSubtitle {
   font-family: var(--font-body);
-  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
   font-weight: 500;
   color: var(--text-secondary);
   line-height: 1.4;
@@ -547,6 +551,7 @@
 .skillsList {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.75rem;
 }
 
@@ -797,6 +802,41 @@
   }
 }
 
+/* 1. Page Load Animations */
+.fadeInUp {
+  animation: fadeInUpAnimation 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.delay1 { animation-delay: 0.15s; }
+.delay2 { animation-delay: 0.3s; }
+.delay3 { animation-delay: 0.45s; }
+.delay4 { animation-delay: 0.6s; }
+
+@keyframes fadeInUpAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 2. Scroll Reveal Animations */
+.scrollReveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.scrollRevealActive {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
   .contactLayout {
@@ -811,13 +851,11 @@
   }
   .nav {
     padding: 0.5rem 1rem;
+    justify-content: center;
+    gap: 1rem;
   }
   .logo {
     display: none;
-  }
-  .nav {
-    justify-content: center;
-    gap: 1rem;
   }
   .navLinks {
     gap: 0.5rem;
@@ -827,7 +865,7 @@
     padding: 0.3rem 0.6rem;
   }
   .heroSection {
-    padding: 7rem 1.5rem 3rem;
+    padding: 7rem 1.2rem 3rem;
   }
   .heroCta {
     flex-direction: column;
@@ -839,16 +877,24 @@
     width: 100%;
     text-align: center;
   }
+  
+  /* Compact layout on mobile for better responsiveness */
   .aboutCardFull, .timelineContent, .skillGroupCard, .contactCard {
-    padding: 2rem 1.5rem;
+    padding: 1.75rem 1.25rem;
+    border-radius: 20px;
+  }
+  .aboutTextBig {
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
   }
   .educationBox, .certificationBox {
     flex-direction: column;
     text-align: center;
     padding: 1.25rem;
+    gap: 0.75rem;
   }
   .aboutSection, .experienceSection, .projectsSection, .skillsSection, .contactSection {
-    padding: 4rem 1.5rem;
+    padding: 3.5rem 1.2rem;
   }
   .timeline {
     padding-left: 1.8rem;
@@ -856,5 +902,13 @@
   }
   .timelineDot {
     left: calc(-1.8rem - 10px + 1px);
+    width: 16px;
+    height: 16px;
+  }
+  .contactLayout {
+    gap: 2rem;
+  }
+  .contactCard {
+    padding: 2rem 1.25rem;
   }
 }
