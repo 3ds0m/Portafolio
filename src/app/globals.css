@@ -35,7 +35,7 @@
   --card-shadow: 0 10px 30px -10px rgba(2, 71, 61, 0.08);
   --card-shadow-hover: 0 20px 40px -15px rgba(2, 71, 61, 0.15);
 
-  --navbar-bg: rgba(239, 234, 228, 0.4);
+  --navbar-bg: rgba(239, 234, 228, 0.85);
 }
 
 /* Dark Mode Overrides */
@@ -56,7 +56,7 @@
   --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
   --card-shadow-hover: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
 
-  --navbar-bg: rgba(16, 46, 36, 0.4);
+  --navbar-bg: rgba(16, 46, 36, 0.85);
 }
 
 /* Global Reset */

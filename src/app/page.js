@@ -180,7 +180,6 @@ export default function Home() {
             <a href="#about">Sobre Mí</a>
             <a href="#experience">Experiencia</a>
             <a href="#projects">Proyectos</a>
-            <a href="#skills">Habilidades</a>
             <a href="#contact">Contacto</a>
             <button 
               onClick={toggleTheme} 
