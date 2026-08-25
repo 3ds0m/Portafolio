@@ -83,6 +83,33 @@ function CardTile({ children, className = "", onClick, style = {}, highlightBord
   );
 }
 
+const techCategories = [
+  {
+    name: "Lenguajes",
+    items: ["Java", "C#", "JavaScript", "Thymeleaf", "Perl", "Python", "HTML", "DTD", "XSD", "CSS"]
+  },
+  {
+    name: "Frameworks",
+    items: ["Springboot", ".NET", "Bootstrap", "Next.Js", "FastAPI", "React", "Angular", "Node JS"]
+  },
+  {
+    name: "BBDD",
+    items: ["PostgreSQL", "MySQL", "MongoDB"]
+  },
+  {
+    name: "Cloud",
+    items: ["AWS", "Azure", "VPS", "Vercel", "Railway", "Render"]
+  },
+  {
+    name: "Testing",
+    items: ["Jest", "Pytest", "JUnit", "Docker Compose", "Kubernetes"]
+  },
+  {
+    name: "Herramientas",
+    items: ["Docker", "Git", "Github", "Jira", "IntelliJ", "VSCode", "Cursor", "Canva", "Excel", "Selenium", "Postman", "API Gateway", "Kong", "Kafka", "UIPath", "Claude Code", "TRAE"]
+  }
+];
+
 export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -90,6 +117,7 @@ export default function Home() {
   const [greeting, setGreeting] = useState("¡HOLA!");
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const [activeExperienceIdx, setActiveExperienceIdx] = useState(0);
+  const [activeCategoryIdx, setActiveCategoryIdx] = useState(0);
 
   // Terminal state
   const [terminalForm, setTerminalForm] = useState({ name: "", email: "", message: "" });
@@ -97,7 +125,7 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
 
-  // Load and apply theme, clock updates
+  // Load and apply theme, clock updates, and tech rotation
   useEffect(() => {
     setMounted(true);
     
@@ -123,17 +151,26 @@ export default function Home() {
       
       const h = date.getHours();
       if (h >= 6 && h < 12) {
-        setGreeting("BUENOS DÍAS 🌅");
+        setGreeting("BUENOS DÍAS :)");
       } else if (h >= 12 && h < 20) {
-        setGreeting("BUENAS TARDES ☀️");
+        setGreeting("BUENAS TARDES :)");
       } else {
-        setGreeting("BUENAS NOCHES 🌙");
+        setGreeting("BUENAS NOCHES :)");
       }
     };
     
     updateTime();
     const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
+
+    // Rotate tech stack categories every 3.5 seconds
+    const techInterval = setInterval(() => {
+      setActiveCategoryIdx((prev) => (prev + 1) % techCategories.length);
+    }, 3500);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(techInterval);
+    };
   }, []);
 
   // Handle manual theme toggle
@@ -262,7 +299,7 @@ export default function Home() {
       {/* --- Simplified Editorial Header --- */}
       <header className="w-full py-6 flex justify-between items-center border-b border-brand-border mb-10">
         <div className="font-headings font-extrabold text-2xl tracking-tight text-text-main">
-          ⚡ EDSON GONZALES
+          EDSON GONZALES
         </div>
         
         <div className="flex items-center gap-6 font-tech text-xs">
@@ -383,23 +420,56 @@ export default function Home() {
         </CardTile>
 
         {/* ==========================================
-            TILE D: TECH STACK GRID (Size: 3x1)
+            TILE D: ROTATING TECH STACK (Size: 3x1)
            ========================================== */}
         <CardTile className="lg:col-span-3 lg:row-span-1 p-6 flex flex-col justify-between bg-tile-bg">
-          <span className="font-tech text-[10px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider w-max">
-            03 / TECNOLOGÍAS
-          </span>
-          <div className="flex flex-wrap gap-1.5 my-2">
-            {techStack.slice(0, 8).map((tech, idx) => (
-              <span 
-                key={idx} 
-                className="font-tech text-[9px] bg-brand-border/20 text-text-main border border-brand-border px-1.5 py-0.5 hover:border-brand-accent transition-colors"
-              >
-                {tech}
-              </span>
-            ))}
+          <div className="flex justify-between items-start">
+            <span className="font-tech text-[10px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider w-max">
+              03 / TECNOLOGÍAS
+            </span>
+            {/* Small indicators for rotating categories */}
+            <div className="flex gap-1 mt-1">
+              {techCategories.map((_, idx) => (
+                <span 
+                  key={idx}
+                  className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                    activeCategoryIdx === idx ? "bg-brand-accent" : "bg-brand-border"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-          <span className="font-tech text-[9px] text-text-main/40 uppercase font-bold">Herramientas de automatización</span>
+          
+          <div className="my-2 min-h-[65px] overflow-hidden flex flex-col justify-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategoryIdx}
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-1"
+              >
+                <span className="font-tech text-[9.5px] uppercase tracking-widest text-brand-accent font-bold block">
+                  {techCategories[activeCategoryIdx].name}
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {techCategories[activeCategoryIdx].items.map((tech, idx) => (
+                    <span 
+                      key={idx} 
+                      className="font-tech text-[8px] bg-brand-border/20 text-text-main border border-brand-border px-1.5 py-0.5 hover:border-brand-accent transition-colors"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          
+          <span className="font-tech text-[9px] text-text-main/40 uppercase font-bold">
+            ROTANDO CATEGORÍAS EN SISTEMA
+          </span>
         </CardTile>
 
         {/* ==========================================
