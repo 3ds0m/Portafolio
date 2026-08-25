@@ -31,7 +31,23 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata = {
   title: "Edson Gonzales | Full Stack Engineer",
-  description: "Swiss Neo-Metro & Tactile Paper dual-mode Portfolio. Modular, clean, and highly editorial design.",
+  description: "Portafolio profesional interactivo de Edson Gonzales, desarrollador full stack. Diseño suizo modular Metro y Tactile Paper.",
+  authors: [{ name: 'Edson Gonzales', url: 'mailto:edson7mayo@gmail.com' }],
+  keywords: ['Edson Gonzales', 'Full Stack Developer', 'Desarrollador Web', 'Madrid', 'Next.js', 'React', 'C#', '.NET', 'Portfolio', 'WebRTC', 'PyTorch'],
+  creator: 'Edson Gonzales',
+  publisher: 'Edson Gonzales',
+  openGraph: {
+    title: 'Edson Gonzales | Full Stack Engineer',
+    description: 'Portafolio profesional interactivo de Edson Gonzales, desarrollador full stack.',
+    url: 'https://github.com/3ds0m/Portafolio',
+    siteName: 'Portafolio de Edson Gonzales',
+    locale: 'es_ES',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  }
 };
 
 export default function RootLayout({ children }) {
