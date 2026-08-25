@@ -1,135 +1,46 @@
-/* Global Design System - Inspired by seanhalpin.xyz */
+@import "tailwindcss";
 
-:root {
-  /* Fonts */
-  --font-headings: var(--font-headings), Georgia, serif;
-  --font-body: var(--font-body), -apple-system, sans-serif;
-
-  /* Pastel Colors (Fixed) */
-  --color-beige: #efeae4;
-  --color-forest-green: #02473d;
-  --color-mint-dark: #126356;
-  --color-mint-light: #e0f0eb;
+@theme {
+  --font-headings: var(--font-headings), sans-serif;
+  --font-body: var(--font-body), sans-serif;
+  --font-tech: var(--font-tech), monospace;
   
-  --pastel-lilac: #ccd2ff;
-  --pastel-blue: #c7e6ff;
-  --pastel-pink: #f3d0f7;
-  --pastel-yellow: #ffeab3;
-  --pastel-rust: #f0c5b3;
-  --pastel-mint: #beefe1;
-
-  /* Theme variables - Light Mode (Default) */
-  --bg-primary: var(--color-beige);
-  --text-primary: var(--color-forest-green);
-  --text-secondary: #4a6c66;
+  --color-brand-obsidian: #0C0C0E;
+  --color-brand-white: #F8F9FA;
+  --color-brand-cobalt: #1A56DB;
+  --color-brand-yellow: #EBF800;
+  --color-brand-graphite: #2A2B30;
   
-  --accent-primary: var(--color-forest-green);
-  --accent-hover: var(--color-mint-dark);
-  --accent-bg: var(--color-mint-light);
+  --color-pastel-mint: #beefe1;
+  --color-pastel-blue: #c7e6ff;
+  --color-pastel-pink: #f3d0f7;
+  --color-pastel-yellow: #ffeab3;
+  --color-pastel-rust: #f0c5b3;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    background-color: #0C0C0E;
+    color: #F8F9FA;
+  }
   
-  --border-color: rgba(2, 71, 61, 0.12);
-  --border-hover: rgba(2, 71, 61, 0.25);
+  /* Hide standard scrollbars for a clean look or style them flatly */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
   
-  --card-bg: rgba(255, 255, 255, 0.65);
-  --card-hover-bg: rgba(255, 255, 255, 0.9);
-  --card-shadow: 0 10px 30px -10px rgba(2, 71, 61, 0.08);
-  --card-shadow-hover: 0 20px 40px -15px rgba(2, 71, 61, 0.15);
-
-  --navbar-bg: #efeae4;
-}
-
-/* Dark Mode Overrides */
-.dark {
-  --bg-primary: #102e24;
-  --text-primary: #9de8d0;
-  --text-secondary: #80bda9;
+  ::-webkit-scrollbar-track {
+    background: #0C0C0E;
+  }
   
-  --accent-primary: #9de8d0;
-  --accent-hover: #b4edd9;
-  --accent-bg: rgba(157, 232, 208, 0.1);
+  ::-webkit-scrollbar-thumb {
+    background: #2A2B30;
+    border: 2px solid #0C0C0E;
+  }
   
-  --border-color: rgba(157, 232, 208, 0.2);
-  --border-hover: rgba(157, 232, 208, 0.4);
-  
-  --card-bg: rgba(16, 46, 36, 0.6);
-  --card-hover-bg: rgba(16, 46, 36, 0.85);
-  --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
-  --card-shadow-hover: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-
-  --navbar-bg: #102e24;
-}
-
-/* Global Reset */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-html, body {
-  width: 100%;
-  min-height: 100%;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
-
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-headings);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-
-h1 {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-}
-
-h2 {
-  font-size: clamp(1.8rem, 4vw, 3rem);
-}
-
-h3 {
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
-}
-
-p {
-  line-height: 1.7;
-  font-size: clamp(1rem, 1.1vw, 1.25rem);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-/* Selection */
-::selection {
-  background-color: var(--accent-primary);
-  color: var(--bg-primary);
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  ::-webkit-scrollbar-thumb:hover {
+    background: #1A56DB;
+  }
 }
