@@ -1,16 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --font-headings: var(--font-headings), sans-serif;
+  --font-headings: var(--font-fraunces), serif;
   --font-body: var(--font-body), sans-serif;
   --font-tech: var(--font-tech), monospace;
   
-  --color-brand-obsidian: #0C0C0E;
-  --color-brand-white: #F8F9FA;
-  --color-brand-cobalt: #1A56DB;
-  --color-brand-yellow: #EBF800;
-  --color-brand-graphite: #2A2B30;
+  /* Dual Mode Theme Colors - Defaults to Light Mode (Tactile Paper) */
+  --color-bg-page: #F5F3EF;             /* Raw Alabaster paper background */
+  --color-text-main: #1A1A1E;           /* Charcoal Ink */
+  --color-brand-accent: #D05A3F;        /* Terracotta Clay */
+  --color-brand-border: #E5DFD3;        /* Warm Sand */
+  --color-brand-secondary: #4A5844;     /* Olive Moss */
+  --color-tile-bg: #F5F3EF;             /* Debossed paper card matching background */
   
+  --shadow-tile: inset 2px 2px 5px rgba(26, 26, 30, 0.06), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+  
+  /* Highlight tiles (Stat card) default values (Terracotta background / Raw Alabaster text in Light Mode) */
+  --color-tile-highlight-bg: #D05A3F;
+  --color-tile-highlight-text: #F5F3EF;
+
+  /* Pastels for project tags */
   --color-pastel-mint: #beefe1;
   --color-pastel-blue: #c7e6ff;
   --color-pastel-pink: #f3d0f7;
@@ -18,29 +27,52 @@
   --color-pastel-rust: #f0c5b3;
 }
 
+/* Overrides when .dark is active (Swiss Neo-Metro style) */
+.dark {
+  --font-headings: var(--font-syne), sans-serif;
+  
+  --color-bg-page: #0C0C0E;             /* Obsidian Black */
+  --color-text-main: #F8F9FA;           /* Alpine White */
+  --color-brand-accent: #1A56DB;        /* Kinetic Cobalt */
+  --color-brand-border: #2A2B30;        /* Muted Graphite */
+  --color-brand-secondary: #EBF800;     /* Acid Yellow */
+  --color-tile-bg: rgba(42, 43, 48, 0.15); /* Semi-transparent graphite for Neo-Metro tiles */
+  
+  --shadow-tile: 0 4px 20px -5px rgba(0, 0, 0, 0.3);
+  
+  /* Highlight tiles (Stat card) dark values (Acid Yellow background / Obsidian Black text) */
+  --color-tile-highlight-bg: #EBF800;
+  --color-tile-highlight-text: #0C0C0E;
+}
+
 @layer base {
-  html {
-    font-family: var(--font-body);
-    background-color: #0C0C0E;
-    color: #F8F9FA;
+  body {
+    background-color: var(--color-bg-page);
+    color: var(--color-text-main);
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, font-family 0.4s ease;
   }
   
-  /* Hide standard scrollbars for a clean look or style them flatly */
+  h1, h2, h3, h4, h5, h6 {
+    transition: color 0.4s ease, font-family 0.4s ease;
+  }
+  
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   
   ::-webkit-scrollbar-track {
-    background: #0C0C0E;
+    background: var(--color-bg-page);
+    transition: background-color 0.4s ease;
   }
   
   ::-webkit-scrollbar-thumb {
-    background: #2A2B30;
-    border: 2px solid #0C0C0E;
+    background: var(--color-brand-border);
+    border: 2px solid var(--color-bg-page);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: #1A56DB;
+    background: var(--color-brand-accent);
   }
 }

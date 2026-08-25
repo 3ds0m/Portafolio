@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { 
   ArrowUpRight, 
   Mail, 
@@ -15,7 +14,9 @@ import {
   ExternalLink,
   Code,
   Layers,
-  Cpu
+  Cpu,
+  Sun,
+  Moon
 } from "lucide-react";
 
 // --- Custom SVG Brand Icons ---
@@ -41,7 +42,6 @@ function LinkedinIcon(props) {
 // --- 3D Parallax Tilt Card Component ---
 function CardTile({ children, className = "", onClick, style = {}, highlightBorder = false }) {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e) => {
     const el = e.currentTarget;
@@ -50,37 +50,31 @@ function CardTile({ children, className = "", onClick, style = {}, highlightBord
     const y = e.clientY - rect.top;
     const xc = rect.width / 2;
     const yc = rect.height / 2;
-    // Max rotation 4 degrees for subtle premium movement
-    const rotateY = ((x - xc) / xc) * 4;
-    const rotateX = -((y - yc) / yc) * 4;
+    // Subtle 3D rotation
+    const rotateY = ((x - xc) / xc) * 3;
+    const rotateX = -((y - yc) / yc) * 3;
     setRotate({ x: rotateX, y: rotateY });
   };
 
   const handleMouseLeave = () => {
     setRotate({ x: 0, y: 0 });
-    setIsHovered(false);
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
   };
 
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, scale: 0.95 },
+        hidden: { opacity: 0, scale: 0.96 },
         visible: { opacity: 1, scale: 1 }
       }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative bg-brand-graphite/40 border border-brand-graphite rounded-none overflow-hidden transition-all duration-300 ease-out select-none ${
-        highlightBorder ? "hover:border-brand-yellow" : "hover:border-brand-cobalt"
+      className={`group relative bg-var(--color-tile-bg) border border-brand-border/60 shadow-tile rounded-none overflow-hidden transition-all duration-300 ease-out select-none ${
+        highlightBorder ? "hover:border-brand-secondary" : "hover:border-brand-accent"
       } ${className}`}
       style={{
         transform: `perspective(1000px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
         ...style
       }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
@@ -90,9 +84,10 @@ function CardTile({ children, className = "", onClick, style = {}, highlightBord
 }
 
 export default function Home() {
+  const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState("");
-  const [greeting, setGreeting] = useState("HOLA");
+  const [greeting, setGreeting] = useState("¡HOLA!");
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const [activeExperienceIdx, setActiveExperienceIdx] = useState(0);
 
@@ -102,7 +97,59 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
 
-  // Real data
+  // Load and apply theme, clock updates
+  useEffect(() => {
+    setMounted(true);
+    
+    // Theme setup: Default to light mode (Tactile Paper) unless theme is explicitly saved as dark
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setIsDark(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      setIsDark(false);
+      document.documentElement.classList.remove("dark");
+      if (!savedTheme) {
+        localStorage.setItem("theme", "light");
+      }
+    }
+
+    const updateTime = () => {
+      const date = new Date();
+      const hh = String(date.getHours()).padStart(2, "0");
+      const mm = String(date.getMinutes()).padStart(2, "0");
+      const ss = String(date.getSeconds()).padStart(2, "0");
+      setTime(`${hh}:${mm}:${ss}`);
+      
+      const h = date.getHours();
+      if (h >= 6 && h < 12) {
+        setGreeting("BUENOS DÍAS 🌅");
+      } else if (h >= 12 && h < 20) {
+        setGreeting("BUENAS TARDES ☀️");
+      } else {
+        setGreeting("BUENAS NOCHES 🌙");
+      }
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Handle manual theme toggle
+  const toggleTheme = () => {
+    if (isDark) {
+      setIsDark(false);
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      setIsDark(true);
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+  };
+
+  // Real CV data
   const experiences = [
     {
       role: "Freelance Full Stack",
@@ -165,35 +212,6 @@ export default function Home() {
     "Python", "PyTorch", "Azure", "Docker", "PostgreSQL"
   ];
 
-  // Dynamic JS Clock & Greetings
-  useEffect(() => {
-    setMounted(true);
-    
-    const updateTime = () => {
-      const date = new Date();
-      
-      // Formatting time in European style HH:MM:SS
-      const hh = String(date.getHours()).padStart(2, "0");
-      const mm = String(date.getMinutes()).padStart(2, "0");
-      const ss = String(date.getSeconds()).padStart(2, "0");
-      setTime(`${hh}:${mm}:${ss}`);
-      
-      // Dynamic greeting based on current local hours
-      const h = date.getHours();
-      if (h >= 6 && h < 12) {
-        setGreeting("BUENOS DÍAS 🌅");
-      } else if (h >= 12 && h < 20) {
-        setGreeting("BUENAS TARDES ☀️");
-      } else {
-        setGreeting("BUENAS NOCHES 🌙");
-      }
-    };
-    
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   // Terminal contact form handler
   const handleTerminalSubmit = (e) => {
     e.preventDefault();
@@ -236,28 +254,44 @@ export default function Home() {
     setTerminalForm(prev => ({ ...prev, [name]: value }));
   };
 
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-[#0C0C0E] flex items-center justify-center font-tech text-brand-yellow">
-        [ CARGANDO SISTEMA DE DISEÑO SUIZO... ]
-      </div>
-    );
-  }
+  if (!mounted) return null;
 
   return (
-    <div className="w-full max-w-[1250px] mx-auto px-4 py-8 flex flex-col min-h-screen justify-between selection:bg-brand-yellow selection:text-brand-obsidian">
+    <div className="w-full max-w-[1250px] mx-auto px-4 py-8 flex flex-col min-h-screen justify-between selection:bg-brand-accent selection:text-white">
       
-      {/* --- Minimalist Swiss Header --- */}
-      <header className="w-full py-6 flex justify-between items-center border-b border-brand-graphite mb-10">
-        <div className="font-headings font-extrabold text-2xl tracking-tighter text-brand-white">
-          ⚡ EDSON<span className="text-brand-cobalt">.DEV</span>
+      {/* --- Simplified Editorial Header --- */}
+      <header className="w-full py-6 flex justify-between items-center border-b border-brand-border mb-10">
+        <div className="font-headings font-extrabold text-2xl tracking-tight text-text-main">
+          ⚡ EDSON GONZALES
         </div>
-        <nav className="font-tech text-xs tracking-wider flex gap-6 text-brand-white/80">
-          <a href="#about" className="hover:text-brand-yellow transition-colors">[ 01. SOBRE_MÍ ]</a>
-          <a href="#projects" className="hover:text-brand-yellow transition-colors">[ 02. PROYECTOS ]</a>
-          <a href="#experience" className="hover:text-brand-yellow transition-colors">[ 03. TRAYECTORIA ]</a>
-          <a href="#contact" className="hover:text-brand-yellow transition-colors">[ 04. CONTACTO ]</a>
-        </nav>
+        
+        <div className="flex items-center gap-6 font-tech text-xs">
+          <a 
+            href="mailto:edson7mayo@gmail.com" 
+            className="hover:text-brand-accent transition-colors hidden sm:inline"
+          >
+            [ edson7mayo@gmail.com ]
+          </a>
+          
+          <button 
+            onClick={toggleTheme} 
+            className="p-2 border border-brand-border hover:border-brand-accent hover:text-brand-accent transition-all cursor-pointer flex items-center gap-2 select-none"
+            aria-label="Toggle Theme"
+            title="Cambiar Modo"
+          >
+            {isDark ? (
+              <>
+                <Sun size={14} />
+                <span>CLARO</span>
+              </>
+            ) : (
+              <>
+                <Moon size={14} />
+                <span>OSCURO</span>
+              </>
+            )}
+          </button>
+        </div>
       </header>
 
       {/* --- Main 12-Column Asymmetric Grid Container --- */}
@@ -275,109 +309,106 @@ export default function Home() {
       >
         
         {/* ==========================================
-            TILE A: HERO PROFILE TILE (Size: 6x2)
+            TILE A: HERO PRESENTATION TILE (Size: 6x2)
            ========================================== */}
-        <CardTile className="lg:col-span-6 lg:row-span-2 p-8 flex flex-col justify-between bg-brand-graphite/10 relative min-h-[360px]">
+        <CardTile className="lg:col-span-6 lg:row-span-2 p-8 flex flex-col justify-between bg-tile-bg min-h-[360px]">
           <div className="flex justify-between items-start">
-            <span className="font-tech text-[10px] text-brand-yellow tracking-widest bg-brand-graphite px-2 py-0.5">
-              00 / HERO SYSTEM
+            <span className="font-tech text-[10px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider">
+              01 / PRESENTACIÓN
             </span>
-            <div className="w-16 h-16 relative overflow-hidden border border-brand-graphite bg-brand-obsidian rounded-none">
-              <Image 
-                src="/avatar.png" 
-                alt="Edson Gonzales Avatar"
-                fill
-                priority
-                className="object-cover grayscale hover:grayscale-0 transition-all duration-300"
-              />
-            </div>
           </div>
           
           <div className="my-6">
-            <p className="font-tech text-xs text-brand-cobalt mb-2 font-bold tracking-widest uppercase">
-              // FULL STACK ENGINEER
+            <p className="font-tech text-xs text-brand-accent mb-2 font-bold tracking-widest uppercase">
+              // DESARROLLADOR WEB FULL STACK
             </p>
-            <h1 className="font-headings font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tighter text-brand-white leading-none uppercase">
+            <h1 className="font-headings font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-text-main leading-none uppercase">
               EDSON<br/>GONZALES
             </h1>
+            <p className="font-body text-sm text-text-main/70 mt-4 leading-relaxed max-w-[480px]">
+              Especializado en el diseño e implementación de productos interactivos robustos, modulares y de alto rendimiento.
+            </p>
           </div>
           
-          <div className="flex items-center gap-3 text-xs font-tech text-brand-white/60">
+          <div className="flex items-center gap-3 text-xs font-tech text-text-main/60">
             <span className="w-2.5 h-2.5 bg-green-500 inline-block animate-pulse"></span>
-            DISPONIBLE PARA PROPUESTAS / FREELANCE
+            DISPONIBLE PARA PROYECTOS / FREELANCE
           </div>
         </CardTile>
 
         {/* ==========================================
-            TILE B: QUICK INTRO TILE (Size: 6x1)
+            TILE B: PROFILE DETAIL TILE (Size: 6x1)
            ========================================== */}
-        <CardTile className="lg:col-span-6 lg:row-span-1 p-8 flex flex-col justify-between bg-brand-graphite/10">
+        <CardTile className="lg:col-span-6 lg:row-span-1 p-8 flex flex-col justify-between bg-tile-bg">
           <div className="flex justify-between items-start">
-            <span className="font-tech text-[10px] text-brand-yellow tracking-widest bg-brand-graphite px-2 py-0.5">
-              01 / PROFILE_SUMMARY
+            <span className="font-tech text-[10px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider">
+              02 / PERFIL PROFESIONAL
             </span>
-            <span className="font-tech text-xs text-brand-white/40">MADRID, ES</span>
+            <span className="font-tech text-xs text-text-main/40">MADRID, ES</span>
           </div>
           
-          <p className="font-body text-base text-brand-white/80 my-4 leading-relaxed">
-            Persona de rápido aprendizaje, dedicada y comprometida. Destaco por mi capacidad de resolver problemas, adaptabilidad tecnológica y empatía técnica. Especializado en Next.js, APIs de alta confiabilidad y despliegues robustos.
+          <p className="font-body text-sm text-text-main/80 my-4 leading-relaxed">
+            Persona de rápido aprendizaje, dedicada y comprometida. Destaco por mi capacidad de resolver problemas complejos, adaptabilidad y empatía técnica con clientes y compañeros.
           </p>
 
-          <div className="flex gap-4 font-tech text-xs text-brand-yellow">
-            <span>DAW GRADO SUPERIOR</span>
-            <span className="text-brand-white/40">|</span>
-            <span>ENGLISH LEVEL C1</span>
+          <div className="flex gap-4 font-tech text-[10px] text-brand-accent/80 font-bold">
+            <span>ESTUDIOS: DAW (GRADO SUPERIOR)</span>
+            <span className="text-brand-border">|</span>
+            <span>IDIOMAS: INGLÉS C1</span>
           </div>
         </CardTile>
 
         {/* ==========================================
-            TILE C: QUICK STAT TILE (Size: 3x1)
+            TILE C: EXPERIENCE STAT (Size: 3x1)
            ========================================== */}
         <CardTile 
-          highlightBorder={true}
-          className="lg:col-span-3 lg:row-span-1 p-6 flex flex-col justify-between bg-brand-yellow text-brand-obsidian"
+          style={{ 
+            backgroundColor: "var(--color-tile-highlight-bg)", 
+            color: "var(--color-tile-highlight-text)" 
+          }}
+          className="lg:col-span-3 lg:row-span-1 p-6 flex flex-col justify-between"
         >
-          <span className="font-tech text-[10px] tracking-widest bg-brand-obsidian/10 text-brand-obsidian font-bold px-2 py-0.5 w-max">
-            METRICS
+          <span className="font-tech text-[10px] tracking-wider bg-black/10 px-2 py-0.5 w-max font-bold">
+            TRAYECTORIA
           </span>
           <div className="my-2">
             <span className="font-headings font-extrabold text-5xl tracking-tighter leading-none">
-              +3
+              +2
             </span>
             <p className="font-tech text-[11px] font-extrabold tracking-wider leading-tight uppercase mt-1">
               AÑOS DE EXPERIENCIA<br/>EN DESARROLLO Y OBRA
             </p>
           </div>
-          <span className="font-tech text-[10px] text-brand-obsidian/70">PROYECTOS COMPLETOS</span>
+          <span className="font-tech text-[9px] opacity-80">PROYECTOS TÉCNICOS COMPLETOS</span>
         </CardTile>
 
         {/* ==========================================
             TILE D: TECH STACK GRID (Size: 3x1)
            ========================================== */}
-        <CardTile className="lg:col-span-3 lg:row-span-1 p-6 flex flex-col justify-between bg-brand-graphite/10">
-          <span className="font-tech text-[10px] text-brand-yellow tracking-widest bg-brand-graphite px-2 py-0.5 w-max">
-            02 / CORE_STACK
+        <CardTile className="lg:col-span-3 lg:row-span-1 p-6 flex flex-col justify-between bg-tile-bg">
+          <span className="font-tech text-[10px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider w-max">
+            03 / TECNOLOGÍAS
           </span>
           <div className="flex flex-wrap gap-1.5 my-2">
             {techStack.slice(0, 8).map((tech, idx) => (
               <span 
                 key={idx} 
-                className="font-tech text-[9px] bg-brand-graphite text-brand-white border border-brand-graphite/80 px-1.5 py-0.5 hover:border-brand-cobalt transition-colors"
+                className="font-tech text-[9px] bg-brand-border/20 text-text-main border border-brand-border px-1.5 py-0.5 hover:border-brand-accent transition-colors"
               >
                 {tech}
               </span>
             ))}
           </div>
-          <span className="font-tech text-[9px] text-brand-white/40">Y HERRAMIENTAS DE TESTING</span>
+          <span className="font-tech text-[9px] text-text-main/40 uppercase font-bold">Herramientas de automatización</span>
         </CardTile>
 
         {/* ==========================================
-            TILE E: INTERACTIVE PROJECT HERO SHOWCASE (Size: 8x2)
+            TILE E: INTERACTIVE PROJECT SHOWCASE (Size: 8x2)
            ========================================== */}
-        <CardTile className="lg:col-span-8 lg:row-span-2 p-8 flex flex-col justify-between bg-brand-graphite/5 min-h-[420px]">
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-brand-graphite/50 pb-4">
-            <span className="font-tech text-[10px] text-brand-yellow tracking-widest bg-brand-graphite px-2 py-0.5 w-max">
-              03 / FEATURED_CASES
+        <CardTile className="lg:col-span-8 lg:row-span-2 p-8 flex flex-col justify-between bg-tile-bg min-h-[420px]">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-brand-border/80 pb-4">
+            <span className="font-tech text-[10px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider w-max">
+              04 / PROYECTOS DESTACADOS
             </span>
             
             {/* Visual Tabs */}
@@ -386,10 +417,10 @@ export default function Home() {
                 <button
                   key={idx}
                   onClick={() => setActiveProjectIdx(idx)}
-                  className={`px-3 py-1 border transition-all ${
+                  className={`px-3 py-1 border transition-all cursor-pointer ${
                     activeProjectIdx === idx 
-                      ? "border-brand-cobalt bg-brand-cobalt text-brand-white"
-                      : "border-brand-graphite text-brand-white/60 hover:text-brand-white hover:border-brand-white/40"
+                      ? "border-brand-accent bg-brand-accent text-white font-bold"
+                      : "border-brand-border text-text-main/60 hover:text-text-main hover:border-brand-border/80"
                   }`}
                 >
                   {proj.title.toUpperCase()}
@@ -410,13 +441,13 @@ export default function Home() {
                 className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center"
               >
                 <div className="lg:col-span-7">
-                  <span className="font-tech text-xs text-brand-cobalt font-bold tracking-widest">
-                    {projects[activeProjectIdx].subtitle.toUpperCase()}
+                  <span className="font-tech text-xs text-brand-accent font-bold tracking-widest block uppercase">
+                    {projects[activeProjectIdx].subtitle}
                   </span>
-                  <h3 className="font-headings font-extrabold text-3xl tracking-tighter text-brand-white mt-1 uppercase">
+                  <h3 className="font-headings font-extrabold text-3xl tracking-tight text-text-main mt-1 uppercase">
                     {projects[activeProjectIdx].title}
                   </h3>
-                  <p className="font-body text-sm text-brand-white/70 mt-3 leading-relaxed">
+                  <p className="font-body text-sm text-text-main/70 mt-3 leading-relaxed">
                     {projects[activeProjectIdx].description}
                   </p>
                   
@@ -424,7 +455,7 @@ export default function Home() {
                     {projects[activeProjectIdx].tags.map((tag, tIdx) => (
                       <span 
                         key={tIdx} 
-                        className="font-tech text-[10px] bg-brand-graphite/60 border border-brand-graphite px-2 py-0.5 text-brand-white/90"
+                        className="font-tech text-[10px] bg-brand-border/20 border border-brand-border px-2 py-0.5 text-text-main/80"
                       >
                         #{tag}
                       </span>
@@ -433,22 +464,22 @@ export default function Home() {
                 </div>
                 
                 {/* Decorative Visual/Wireframe Asset for project */}
-                <div className="lg:col-span-5 h-[160px] bg-brand-graphite/20 border border-brand-graphite/40 flex flex-col justify-between p-4 relative overflow-hidden group/asset">
-                  <div className="absolute inset-0 bg-radial-gradient from-brand-cobalt/10 to-transparent pointer-events-none"></div>
+                <div className="lg:col-span-5 h-[160px] bg-brand-border/20 border border-brand-border/60 flex flex-col justify-between p-4 relative overflow-hidden group/asset">
+                  <div className="absolute inset-0 bg-radial-gradient from-brand-accent/5 to-transparent pointer-events-none"></div>
                   
                   {/* Wireframe grids */}
-                  <div className="absolute -right-4 -bottom-4 w-28 h-28 border border-dashed border-brand-cobalt/20 rounded-none transform rotate-12 transition-transform group-hover/asset:rotate-45 duration-700"></div>
+                  <div className="absolute -right-4 -bottom-4 w-28 h-28 border border-dashed border-brand-accent/20 rounded-none transform rotate-12 transition-transform group-hover/asset:rotate-45 duration-700"></div>
                   
                   <div className="flex justify-between items-start z-10">
-                    <Code size={18} className="text-brand-cobalt" />
-                    <span className="font-tech text-[9px] text-brand-yellow">PREVIEW.SH</span>
+                    <Code size={18} className="text-brand-accent" />
+                    <span className="font-tech text-[9px] text-brand-secondary font-bold">PREVIEW.SH</span>
                   </div>
                   
                   <div className="z-10">
-                    <span className="font-tech text-[10px] text-brand-white/30 block tracking-widest uppercase">
-                      BUILD // ACTIVE
+                    <span className="font-tech text-[10px] text-text-main/30 block tracking-widest uppercase font-bold">
+                      ESTADO // ACTIVO
                     </span>
-                    <span className="font-headings font-bold text-xl text-brand-white/80 block mt-1 tracking-tight">
+                    <span className="font-headings font-bold text-xl text-text-main/80 block mt-1 tracking-tight">
                       {projects[activeProjectIdx].title.toUpperCase()}
                     </span>
                   </div>
@@ -458,12 +489,12 @@ export default function Home() {
           </div>
 
           {/* Action Links */}
-          <div className="flex gap-4 border-t border-brand-graphite/50 pt-4 font-tech text-xs">
+          <div className="flex gap-4 border-t border-brand-border/80 pt-4 font-tech text-xs">
             <a 
               href={projects[activeProjectIdx].github} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-brand-white flex items-center gap-1.5 hover:text-brand-yellow transition-colors"
+              className="text-text-main flex items-center gap-1.5 hover:text-brand-accent transition-colors"
             >
               <GithubIcon className="w-3.5 h-3.5" /> [ CÓDIGO_FUENTE ]
             </a>
@@ -472,7 +503,7 @@ export default function Home() {
                 href={projects[activeProjectIdx].demo} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-brand-cobalt flex items-center gap-1.5 hover:text-brand-yellow transition-colors font-bold"
+                className="text-brand-accent flex items-center gap-1.5 hover:text-brand-secondary transition-colors font-bold"
               >
                 <ExternalLink size={14} /> [ DEMO_EN_VIVO ]
               </a>
@@ -483,48 +514,48 @@ export default function Home() {
         {/* ==========================================
             TILE F: PRODUCTION PROCESS (Size: 4x2)
            ========================================== */}
-        <CardTile className="lg:col-span-4 lg:row-span-2 p-8 flex flex-col justify-between bg-brand-graphite/10">
-          <span className="font-tech text-[10px] text-brand-yellow tracking-widest bg-brand-graphite px-2 py-0.5 w-max">
-            04 / METODOLOGÍA
+        <CardTile className="lg:col-span-4 lg:row-span-2 p-8 flex flex-col justify-between bg-tile-bg">
+          <span className="font-tech text-[10px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider w-max">
+            05 / METODOLOGÍA DE TRABAJO
           </span>
           
           <div className="my-6 flex-grow flex flex-col justify-center">
-            <h3 className="font-headings font-extrabold text-2xl tracking-tighter text-brand-white mb-6 uppercase">
+            <h3 className="font-headings font-extrabold text-2xl tracking-tight text-text-main mb-6 uppercase">
               MI PROCESO
             </h3>
             
             <div className="space-y-4 font-tech text-xs">
-              <div className="border-l border-brand-graphite pl-4 hover:border-brand-cobalt transition-colors py-1">
-                <span className="text-brand-cobalt font-bold">01 / ESTRUCTURAR</span>
-                <p className="text-brand-white/60 font-body text-xs mt-0.5">Analizar requisitos y mapear la arquitectura lógica del sistema.</p>
+              <div className="border-l-2 border-brand-border pl-4 hover:border-brand-accent transition-colors py-1">
+                <span className="text-brand-accent font-bold">01 / ESTRUCTURAR</span>
+                <p className="text-text-main/60 font-body text-xs mt-0.5">Analizar requisitos y mapear la arquitectura lógica del sistema.</p>
               </div>
-              <div className="border-l border-brand-graphite pl-4 hover:border-brand-cobalt transition-colors py-1">
-                <span className="text-brand-cobalt font-bold">02 / CODIFICAR</span>
-                <p className="text-brand-white/60 font-body text-xs mt-0.5">Escritura de código limpio, testeable y aplicando principios de optimización.</p>
+              <div className="border-l-2 border-brand-border pl-4 hover:border-brand-accent transition-colors py-1">
+                <span className="text-brand-accent font-bold">02 / CODIFICAR</span>
+                <p className="text-text-main/60 font-body text-xs mt-0.5">Escritura de código limpio, testeable y aplicando principios de optimización.</p>
               </div>
-              <div className="border-l border-brand-graphite pl-4 hover:border-brand-cobalt transition-colors py-1">
-                <span className="text-brand-cobalt font-bold">03 / TESTEAR</span>
-                <p className="text-brand-white/60 font-body text-xs mt-0.5">Validación e integración mediante pruebas de caja negra, integradas y unitarias.</p>
+              <div className="border-l-2 border-brand-border pl-4 hover:border-brand-accent transition-colors py-1">
+                <span className="text-brand-accent font-bold">03 / VALIDAR</span>
+                <p className="text-text-main/60 font-body text-xs mt-0.5">Validación e integración mediante pruebas de caja negra, integradas y unitarias.</p>
               </div>
-              <div className="border-l border-brand-graphite pl-4 hover:border-brand-cobalt transition-colors py-1">
-                <span className="text-brand-cobalt font-bold">04 / DESPLEGAR</span>
-                <p className="text-brand-white/60 font-body text-xs mt-0.5">Configuración CI/CD y publicación automatizada en entornos de producción resilientes.</p>
+              <div className="border-l-2 border-brand-border pl-4 hover:border-brand-accent transition-colors py-1">
+                <span className="text-brand-accent font-bold">04 / DESPLEGAR</span>
+                <p className="text-text-main/60 font-body text-xs mt-0.5">Configuración CI/CD y publicación automatizada en entornos de producción resilientes.</p>
               </div>
             </div>
           </div>
           
-          <span className="font-tech text-[10px] text-brand-white/40 uppercase">Robustez como pilar de diseño</span>
+          <span className="font-tech text-[9px] text-text-main/40 uppercase font-bold">Enfoque en la robustez y limpieza</span>
         </CardTile>
 
         {/* ==========================================
             TILE G: EXPERIENCE TIMELINE WIDGET (Size: 6x2)
            ========================================== */}
-        <CardTile className="lg:col-span-6 lg:row-span-2 p-8 flex flex-col justify-between bg-brand-graphite/5 min-h-[380px]">
-          <div className="flex justify-between items-start border-b border-brand-graphite/50 pb-4 mb-4">
-            <span className="font-tech text-[10px] text-brand-yellow tracking-widest bg-brand-graphite px-2 py-0.5">
-              05 / TIMELINE_WIDGET
+        <CardTile className="lg:col-span-6 lg:row-span-2 p-8 flex flex-col justify-between bg-tile-bg min-h-[380px]">
+          <div className="flex justify-between items-start border-b border-brand-border pb-4 mb-4">
+            <span className="font-tech text-[10px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider">
+              06 / HISTORIAL LABORAL
             </span>
-            <span className="font-tech text-xs text-brand-white/40">TRAYECTORIA LABORAL</span>
+            <span className="font-tech text-xs text-text-main/40 uppercase font-bold">Experiencia</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 my-2 flex-grow items-center">
@@ -535,20 +566,20 @@ export default function Home() {
                 <button
                   key={idx}
                   onClick={() => setActiveExperienceIdx(idx)}
-                  className={`text-left p-2.5 border transition-all ${
+                  className={`text-left p-2.5 border transition-all cursor-pointer ${
                     activeExperienceIdx === idx 
-                      ? "border-brand-cobalt text-brand-white bg-brand-cobalt/10 font-bold"
-                      : "border-brand-graphite/50 text-brand-white/60 hover:text-brand-white hover:border-brand-white/30"
+                      ? "border-brand-accent text-text-main bg-brand-accent/10 font-bold"
+                      : "border-brand-border text-text-main/60 hover:text-text-main hover:border-brand-border/80"
                   }`}
                 >
-                  <span className="text-[10px] text-brand-yellow block mb-0.5">{exp.period}</span>
+                  <span className="text-[10px] text-brand-accent block mb-0.5 font-bold">{exp.period}</span>
                   {exp.role.toUpperCase()}
                 </button>
               ))}
             </div>
 
             {/* Right dynamic panel details */}
-            <div className="sm:col-span-7 h-full flex flex-col justify-between p-4 bg-brand-graphite/20 border border-brand-graphite/40">
+            <div className="sm:col-span-7 h-full flex flex-col justify-between p-4 bg-brand-border/20 border border-brand-border/50">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeExperienceIdx}
@@ -559,15 +590,15 @@ export default function Home() {
                   className="space-y-3"
                 >
                   <div>
-                    <span className="font-tech text-[9.5px] uppercase tracking-widest block text-brand-cobalt font-bold">
+                    <span className="font-tech text-[9.5px] uppercase tracking-widest block text-brand-accent font-bold">
                       {experiences[activeExperienceIdx].company.toUpperCase()}
                     </span>
-                    <h4 className="font-headings font-extrabold text-lg text-brand-white uppercase leading-tight mt-0.5">
+                    <h4 className="font-headings font-extrabold text-lg text-text-main uppercase leading-tight mt-0.5">
                       {experiences[activeExperienceIdx].role}
                     </h4>
                   </div>
                   
-                  <p className="font-body text-xs text-brand-white/70 leading-relaxed">
+                  <p className="font-body text-xs text-text-main/70 leading-relaxed">
                     {experiences[activeExperienceIdx].description}
                   </p>
 
@@ -575,7 +606,7 @@ export default function Home() {
                     {experiences[activeExperienceIdx].stack.map((tech, idx) => (
                       <span 
                         key={idx}
-                        className="font-tech text-[9px] bg-brand-graphite text-brand-white px-1.5 py-0.5 border border-brand-graphite"
+                        className="font-tech text-[9px] bg-brand-border text-text-main px-1.5 py-0.5 border border-brand-border"
                       >
                         {tech}
                       </span>
@@ -586,7 +617,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-brand-graphite/50 pt-4 flex gap-4 font-tech text-xs text-brand-white/50">
+          <div className="border-t border-brand-border pt-4 flex gap-4 font-tech text-xs text-text-main/50">
             <span>PERIODO: 2020 - 2025</span>
           </div>
         </CardTile>
@@ -594,20 +625,20 @@ export default function Home() {
         {/* ==========================================
             TILE H: STATUS & CLOCK WIDGET (Size: 2x2)
            ========================================== */}
-        <CardTile className="lg:col-span-2 lg:row-span-2 p-6 flex flex-col justify-between bg-brand-graphite/10 text-center items-center justify-center">
-          <span className="font-tech text-[9px] text-brand-yellow tracking-widest bg-brand-graphite px-2 py-0.5 w-max">
-            06 / UTC_CLOCK
+        <CardTile className="lg:col-span-2 lg:row-span-2 p-6 flex flex-col justify-between bg-tile-bg text-center items-center justify-center">
+          <span className="font-tech text-[9px] text-brand-accent bg-brand-border/40 px-2 py-0.5 font-bold tracking-wider w-max">
+            07 / HORA LOCAL
           </span>
 
           <div className="my-6">
-            <Clock size={28} className="text-brand-cobalt mx-auto mb-2 animate-pulse" />
-            <div className="font-tech font-bold text-2xl tracking-tighter text-brand-white">
+            <Clock size={28} className="text-brand-accent mx-auto mb-2 animate-pulse" />
+            <div className="font-tech font-bold text-2xl tracking-tighter text-text-main">
               {time || "00:00:00"}
             </div>
-            <span className="font-tech text-[10px] text-brand-white/40 block mt-1">MADRID LOCAL TIME</span>
+            <span className="font-tech text-[10px] text-text-main/40 block mt-1 uppercase font-bold">Madrid, ES</span>
           </div>
 
-          <div className="font-tech text-[10px] text-brand-yellow font-bold uppercase leading-tight mt-2 border-t border-brand-graphite/50 pt-3 w-full">
+          <div className="font-tech text-[10px] text-brand-accent font-bold uppercase leading-tight mt-2 border-t border-brand-border pt-3 w-full">
             {greeting}
           </div>
         </CardTile>
@@ -615,30 +646,30 @@ export default function Home() {
         {/* ==========================================
             TILE I: TERMINAL STYLE CONTACT FORM (Size: 4x2)
            ========================================== */}
-        <CardTile className="lg:col-span-4 lg:row-span-2 p-6 flex flex-col justify-between bg-brand-obsidian border-brand-cobalt min-h-[380px]">
-          <div className="flex justify-between items-center border-b border-brand-graphite pb-3 mb-3">
+        <CardTile className="lg:col-span-4 lg:row-span-2 p-6 flex flex-col justify-between bg-[#111216] border-[#2A2B30] min-h-[380px]">
+          <div className="flex justify-between items-center border-b border-[#2A2B30] pb-3 mb-3">
             <div className="flex gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block"></span>
               <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block"></span>
               <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block"></span>
             </div>
-            <span className="font-tech text-[9.5px] text-brand-cobalt font-bold uppercase">
-              guest@edson.dev: ~/proposal
+            <span className="font-tech text-[9.5px] text-brand-accent font-bold uppercase">
+              guest@edson.dev: ~/contacto
             </span>
           </div>
 
           <form onSubmit={handleTerminalSubmit} className="flex-grow flex flex-col justify-between font-tech text-xs space-y-3">
             
             {/* Simulated log feed */}
-            <div className="flex-grow overflow-y-auto max-h-[140px] text-[10px] space-y-1 bg-brand-graphite/10 p-2 border border-brand-graphite/40 mb-2 font-mono scrollbar-thin">
-              <div className="text-brand-white/40">// Logs de la transmisión activa...</div>
+            <div className="flex-grow overflow-y-auto max-h-[140px] text-[10px] space-y-1 bg-black/40 p-2 border border-[#2A2B30] mb-2 font-mono scrollbar-thin">
+              <div className="text-white/40">// Logs de la transmisión activa...</div>
               {terminalLogs.map((log, idx) => (
                 <div 
                   key={idx} 
                   className={
                     log.type === "error" ? "text-red-400" :
                     log.type === "success" ? "text-green-400" :
-                    log.type === "system" ? "text-brand-yellow" : "text-brand-white/70"
+                    log.type === "system" ? "text-brand-secondary" : "text-white/70"
                   }
                 >
                   {log.text}
@@ -649,9 +680,9 @@ export default function Home() {
             {/* Input boxes structured as bash variables */}
             <div className="space-y-2">
               <div className="flex flex-col gap-1">
-                <label className="text-brand-white/60 uppercase text-[9px]">// 1. Nombre</label>
-                <div className="flex items-center gap-1.5 bg-brand-graphite/20 px-2 py-1.5 border border-brand-graphite">
-                  <span className="text-brand-cobalt">$</span>
+                <label className="text-white/40 uppercase text-[9px]">// 1. Nombre</label>
+                <div className="flex items-center gap-1.5 bg-black/20 px-2 py-1.5 border border-[#2A2B30]">
+                  <span className="text-brand-accent">$</span>
                   <input 
                     type="text"
                     name="name"
@@ -662,16 +693,16 @@ export default function Home() {
                     onFocus={() => setFocusedInput("name")}
                     onBlur={() => setFocusedInput(null)}
                     required
-                    className="bg-transparent border-none outline-none flex-grow text-brand-white text-xs font-tech placeholder-brand-white/20"
+                    className="bg-transparent border-none outline-none flex-grow text-white text-xs font-tech placeholder-white/20"
                   />
-                  {focusedInput === "name" && <span className="w-1.5 h-3 bg-brand-yellow animate-ping"></span>}
+                  {focusedInput === "name" && <span className="w-1.5 h-3 bg-brand-secondary animate-ping"></span>}
                 </div>
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-brand-white/60 uppercase text-[9px]">// 2. Email</label>
-                <div className="flex items-center gap-1.5 bg-brand-graphite/20 px-2 py-1.5 border border-brand-graphite">
-                  <span className="text-brand-cobalt">$</span>
+                <label className="text-white/40 uppercase text-[9px]">// 2. Email</label>
+                <div className="flex items-center gap-1.5 bg-black/20 px-2 py-1.5 border border-[#2A2B30]">
+                  <span className="text-brand-accent">$</span>
                   <input 
                     type="email"
                     name="email"
@@ -682,16 +713,16 @@ export default function Home() {
                     onFocus={() => setFocusedInput("email")}
                     onBlur={() => setFocusedInput(null)}
                     required
-                    className="bg-transparent border-none outline-none flex-grow text-brand-white text-xs font-tech placeholder-brand-white/20"
+                    className="bg-transparent border-none outline-none flex-grow text-white text-xs font-tech placeholder-white/20"
                   />
-                  {focusedInput === "email" && <span className="w-1.5 h-3 bg-brand-yellow animate-ping"></span>}
+                  {focusedInput === "email" && <span className="w-1.5 h-3 bg-brand-secondary animate-ping"></span>}
                 </div>
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-brand-white/60 uppercase text-[9px]">// 3. Propuesta / Mensaje</label>
-                <div className="flex items-start gap-1.5 bg-brand-graphite/20 px-2 py-1.5 border border-brand-graphite">
-                  <span className="text-brand-cobalt mt-0.5">$</span>
+                <label className="text-white/40 uppercase text-[9px]">// 3. Mensaje</label>
+                <div className="flex items-start gap-1.5 bg-black/20 px-2 py-1.5 border border-[#2A2B30]">
+                  <span className="text-brand-accent mt-0.5">$</span>
                   <textarea 
                     name="message"
                     value={terminalForm.message}
@@ -702,9 +733,9 @@ export default function Home() {
                     onFocus={() => setFocusedInput("message")}
                     onBlur={() => setFocusedInput(null)}
                     required
-                    className="bg-transparent border-none outline-none flex-grow text-brand-white text-xs font-tech placeholder-brand-white/20 resize-none"
+                    className="bg-transparent border-none outline-none flex-grow text-white text-xs font-tech placeholder-white/20 resize-none"
                   />
-                  {focusedInput === "message" && <span className="w-1.5 h-3 bg-brand-yellow animate-ping"></span>}
+                  {focusedInput === "message" && <span className="w-1.5 h-3 bg-brand-secondary animate-ping"></span>}
                 </div>
               </div>
             </div>
@@ -712,7 +743,7 @@ export default function Home() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full py-2 bg-brand-yellow text-brand-obsidian font-bold hover:bg-brand-white transition-all uppercase font-tech text-xs tracking-wider select-none rounded-none cursor-pointer flex items-center justify-center gap-2 ${
+              className={`w-full py-2 bg-brand-accent text-white font-bold hover:bg-white hover:text-black transition-all uppercase font-tech text-xs tracking-wider select-none rounded-none cursor-pointer flex items-center justify-center gap-2 ${
                 isSubmitting ? "opacity-55 cursor-not-allowed" : ""
               }`}
             >
@@ -725,25 +756,25 @@ export default function Home() {
       </motion.main>
 
       {/* --- Footer --- */}
-      <footer className="w-full border-t border-brand-graphite mt-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-tech text-brand-white/50">
+      <footer className="w-full border-t border-brand-border mt-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-tech text-text-main/50">
         <div className="flex items-center gap-2">
-          <Cpu size={14} className="text-brand-cobalt" />
-          <span>INSPIRACIÓN METRO UI // RE-IMAGINADO AL ESTILO SUIZO</span>
+          <Cpu size={14} className="text-brand-accent" />
+          <span>REJILLA MODULAR // MODO CLARO: TACTILE PAPER // MODO OSCURO: SWISS NEO-METRO</span>
         </div>
         
-        <div className="flex gap-4">
-          <a href="https://github.com/3ds0m" target="_blank" rel="noopener noreferrer" className="hover:text-brand-yellow transition-colors flex items-center gap-1">
-            <GithubIcon className="w-3 h-3" /> [ GITHUB ]
+        <div className="flex gap-4 font-bold">
+          <a href="https://github.com/3ds0m" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors flex items-center gap-1">
+            <GithubIcon className="w-3.5 h-3.5" /> [ GITHUB ]
           </a>
-          <a href="https://www.linkedin.com/in/reynaldo-edson-gonzales-ramos-149481332/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-yellow transition-colors flex items-center gap-1">
-            <LinkedinIcon className="w-3 h-3" /> [ LINKEDIN ]
+          <a href="https://www.linkedin.com/in/reynaldo-edson-gonzales-ramos-149481332/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors flex items-center gap-1">
+            <LinkedinIcon className="w-3.5 h-3.5" /> [ LINKEDIN ]
           </a>
-          <a href="mailto:edson7mayo@gmail.com" className="hover:text-brand-yellow transition-colors flex items-center gap-1">
+          <a href="mailto:edson7mayo@gmail.com" className="hover:text-brand-accent transition-colors flex items-center gap-1">
             <Mail size={12} /> [ EMAIL ]
           </a>
         </div>
         
-        <span>EDSON GONZALES © 2026 // ALL SYSTEM BUILD OK</span>
+        <span>EDSON GONZALES © 2026 // SYSTEM BUILD OK</span>
       </footer>
 
     </div>
