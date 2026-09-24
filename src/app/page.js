@@ -96,7 +96,7 @@ const t = {
     contact: "08 / CONTACTAR (CONSOLA)",
     available: "DISPONIBLE PARA PROYECTOS / FREELANCE",
     location: "MADRID, ESPAÑA",
-    profileText: "Persona de rápido aprendizaje, dedicada y comprometida. Destaco por mi trabajo en equipo, responsabilidad, puntualidad y empatía, lo que me permite mantener relaciones efectivas y un ambiente laboral positivo.",
+    profileText: "Desarrollador de software orientado a backend y full stack, con experiencia en desarrollo y optimización de servicios web, APIs, bases de datos, cloud e infraestructura. He trabajado con Java, Spring Boot, C#, Node.js, React, PostgreSQL, Docker y Azure, participando en proyectos empresariales, automatización de procesos y desarrollo web freelance de principio a fin.",
     studies: "ESTUDIOS: DAW (IES FRANCISCO DE QUEVEDO)",
     languages: "CERTIFICACIONES: INGLÉS C1 (MCER)",
     experience: "EXPERIENCIA",
@@ -115,7 +115,7 @@ const t = {
     deploy: "04 / DESPLEGAR",
     deployDesc: "Configuración CI/CD y publicación automatizada en entornos de producción resilientes.",
     focus: "Enfoque en la robustez y limpieza",
-    period: "PERIODO: 2020 - 2025",
+    period: "PERIODO: 2020 - PRESENTE",
     downloadLabel: "DESCARGAR CV ATS",
     submitLabel: "EJECUTAR_PROPUESTA.SH",
     executing: "EJECUTANDO...",
@@ -150,7 +150,7 @@ const t = {
     contact: "08 / CONTACT (TERMINAL)",
     available: "AVAILABLE FOR PROJECTS / FREELANCE",
     location: "MADRID, SPAIN",
-    profileText: "Fast learner, dedicated, and highly committed professional. Known for team collaboration, responsibility, punctuality, and empathy, allowing me to maintain productive relationships and a positive work environment.",
+    profileText: "Software developer oriented to backend and full stack, experienced in development and optimization of web services, APIs, databases, cloud, and infrastructure. Worked with Java, Spring Boot, C#, Node.js, React, PostgreSQL, Docker, and Azure, participating in enterprise projects, process automation, and end-to-end freelance web development.",
     studies: "STUDIES: DAW (IES FRANCISCO DE QUEVEDO)",
     languages: "CERTIFICATIONS: ENGLISH C1 (CEFR)",
     experience: "EXPERIENCE",
@@ -169,7 +169,7 @@ const t = {
     deploy: "04 / DEPLOY",
     deployDesc: "CI/CD configuration and automated deployment to resilient production environments.",
     focus: "Focused on robustness and clean code",
-    period: "PERIOD: 2020 - 2025",
+    period: "PERIOD: 2020 - PRESENT",
     downloadLabel: "DOWNLOAD ATS CV",
     submitLabel: "EXECUTE_PROPOSAL.SH",
     executing: "EXECUTING...",
@@ -286,53 +286,53 @@ const projectsData = {
 const experiencesData = {
   es: [
     {
-      role: "Freelance Full Stack",
+      role: "Freelance",
       company: "Proyectos Propios",
-      period: "2025 - PRESENTE",
-      description: "Diseño, desarrollo e implementación de aplicaciones web y CRMs personalizados para autónomos y pequeñas empresas. Arquitectura Serverless, bases de datos optimizadas y layouts modernos enfocados en conversión y accesibilidad.",
-      stack: ["Next.js", "React", "Node.js", "WordPress", "PostgreSQL"],
+      period: "JUN 2025 - PRESENTE",
+      description: "Desarrollo de aplicaciones web y CRM a medida para autónomos y pequeñas empresas con Next.js, React, Node.js y WordPress. Gestión integral: requisitos, presupuesto, arquitectura, desarrollo, despliegue y entrega. Implementación de soluciones full-stack enfocadas en necesidades de negocio.",
+      stack: ["Next.js", "React", "Node.js", "WordPress", "CRM"],
       color: "var(--color-pastel-mint)"
     },
     {
-      role: "Backend Junior",
-      company: "Beca Técnica",
+      role: "Desarrollador Backend",
+      company: "Teleperformance",
       period: "MAR 2025 - JUN 2025",
-      description: "Optimización de bases de datos relacionales e infraestructura cloud en Azure. Automatización de informes de auditoría y calidad mediante scripts en Perl y utilidades backend optimizadas en C# y .NET.",
-      stack: ["C#", ".NET", "Perl", "Azure", "Windows Server"],
+      description: "Administración de infraestructura cloud en Azure, bases de datos y Windows Server para informes de calidad y procesos internos. Desarrollo de herramientas internas en C# y scripts en Perl para auditoría y evaluación automatizada. Creación de automatizaciones RPA con UiPath para optimizar procesos empresariales.",
+      stack: ["C#", "Azure", "Perl", "UiPath", "Windows Server", "SQL"],
       color: "var(--color-pastel-blue)"
     },
     {
-      role: "Diseño & Construcción",
-      company: "Trabajo Autónomo",
-      period: "2020 - 2023",
-      description: "Liderazgo de proyectos técnicos coordinando tiempos, presupuestos y entregas con clientes directos. Desarrollo de capacidades de resolución de problemas e ingeniería de requerimientos bajo presión.",
-      stack: ["Gestión Técnica", "Presupuestos", "AutoCad"],
+      role: "Desarrollador Backend Semi-Senior",
+      company: "Bitel (Lima - Perú)",
+      period: "FEB 2020 - ABR 2023",
+      description: "Desarrollo y mantenimiento de servicios web internos y de atención al cliente. Optimización del rendimiento para reducir tiempos de carga y mejorar la estabilidad de los servicios. Migración de bases de datos y migración de monolitos Java a C#. Automatización de validaciones de calidad y apoyo en QA con Jenkins y Postman. Tareas de infraestructura, servidores, NAS y cloud. Trabajo en equipo de 10 personas.",
+      stack: ["Java", "C#", "Spring Boot", "React", "Node.js", "PostgreSQL", "Docker", "Jenkins", "Azure", "Postman", "Nginx", "Apache"],
       color: "var(--color-pastel-rust)"
     }
   ],
   en: [
     {
-      role: "Freelance Full Stack",
-      company: "Personal Projects",
-      period: "2025 - PRESENT",
-      description: "Design, development, and deployment of custom web apps and CRMs for freelancers and small businesses. Serverless architecture, optimized databases, and modern conversion-oriented layouts.",
-      stack: ["Next.js", "React", "Node.js", "WordPress", "PostgreSQL"],
+      role: "Freelance Developer",
+      company: "Independent Projects",
+      period: "JUN 2025 - PRESENT",
+      description: "Development of custom web applications and bespoke CRMs for freelancers and small businesses with Next.js, React, Node.js, and WordPress. End-to-end management: requirements, budgeting, architecture, development, deployment, and delivery. Business-oriented full-stack solutions.",
+      stack: ["Next.js", "React", "Node.js", "WordPress", "CRM"],
       color: "var(--color-pastel-mint)"
     },
     {
-      role: "Junior Backend Developer",
-      company: "Technical Internship",
+      role: "Backend Developer",
+      company: "Teleperformance",
       period: "MAR 2025 - JUN 2025",
-      description: "Optimization of relational databases and Azure cloud infrastructure. Automation of audit reports and quality checks via Perl scripts and custom C#/.NET backend utilities.",
-      stack: ["C#", ".NET", "Perl", "Azure", "Windows Server"],
+      description: "Administration of cloud infrastructure in Azure, databases, and Windows Server for quality reporting and internal processes. Development of internal tooling in C# and automation scripts in Perl for automated auditing and evaluations. Building RPA automations with UiPath.",
+      stack: ["C#", "Azure", "Perl", "UiPath", "Windows Server", "SQL"],
       color: "var(--color-pastel-blue)"
     },
     {
-      role: "Design & Construction",
-      company: "Self-Employed",
-      period: "2020 - 2023",
-      description: "Technical project leadership managing timelines, budgets, and direct client delivery. Developed strong problem-solving and requirement engineering capabilities under pressure.",
-      stack: ["Tech Management", "Budgeting", "AutoCad"],
+      role: "Semi-Senior Backend Developer",
+      company: "Bitel (Lima - Peru)",
+      period: "FEB 2020 - APR 2023",
+      description: "Development and maintenance of internal web services and customer care platforms. Performance optimization to reduce latency and enhance service stability. Database migrations and modernizing Java monoliths to C#. QA validation automation with Jenkins and Postman. Infrastructure, server maintenance, NAS, and cloud in a collaborative team of 10 engineers.",
+      stack: ["Java", "C#", "Spring Boot", "React", "Node.js", "PostgreSQL", "Docker", "Jenkins", "Azure", "Postman", "Nginx", "Apache"],
       color: "var(--color-pastel-rust)"
     }
   ]
@@ -593,7 +593,7 @@ export default function Home() {
             </span>
             <div className="my-2">
               <span className="font-headings font-extrabold text-5xl tracking-tighter leading-none">
-                +2
+                +4
               </span>
               <p className="font-tech text-[11px] font-extrabold tracking-wider leading-tight uppercase mt-1">
                 {t[lang].yearsStat}
